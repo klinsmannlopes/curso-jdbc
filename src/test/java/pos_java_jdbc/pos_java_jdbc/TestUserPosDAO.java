@@ -1,10 +1,13 @@
 package pos_java_jdbc.pos_java_jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 import dao.UserPosDAO;
+import model.BeanUserFone;
+import model.Telefone;
 import model.Userposjava;
 
 public class TestUserPosDAO {
@@ -15,8 +18,8 @@ public class TestUserPosDAO {
 		Userposjava userPosjava = new Userposjava();
 		UserPosDAO UserPosDao = new UserPosDAO();
 		
-		userPosjava.setNome("matheus");
-		userPosjava.setEmail("matheus@gmail.com");
+		userPosjava.setNome("ney");
+		userPosjava.setEmail("ney@gmail.com");
 		
 		UserPosDao.salvar(userPosjava);
 	
@@ -58,6 +61,27 @@ public class TestUserPosDAO {
 	}
 	
 	@Test
+	public void testeCarregarFoneUser() {
+		UserPosDAO dao = new UserPosDAO();
+		List<BeanUserFone> listUserFone = new ArrayList<BeanUserFone>();
+		
+		try {
+			listUserFone = dao.listaUserFone(2L);
+			
+			for (BeanUserFone beanUserFone : listUserFone) {
+				System.out.println("Nome: " + beanUserFone.getNome());
+				System.out.println("Numero: " + beanUserFone.getNumero());
+				System.out.println("Email: " + beanUserFone.getEmail());
+			}
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
+	@Test
 	public void initAtualizar() {
 		UserPosDAO userDao = new UserPosDAO();
 		UserPosDAO dao = new UserPosDAO();
@@ -86,6 +110,26 @@ public class TestUserPosDAO {
 			e.printStackTrace();
 		}
 		
+
+	}
+	
+	@Test
+	public void initInsertTelefone() {
+		
+		Telefone telefone = new Telefone();
+		UserPosDAO userPosDao = new UserPosDAO();
+		
+		try {
+			
+			telefone.setNumero("(85)-99999-9999");
+			telefone.setTipo("Fixo");
+			telefone.setUsuario(2L);
+			
+			userPosDao.salvaTelefone(telefone);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
 	}
 	

@@ -4,11 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.sun.jna.platform.win32.Netapi32Util.User;
 
 import conexaojdbc.SingleConnection;
+import model.BeanUserFone;
+import model.Telefone;
 import model.Userposjava;
 
 public class UserPosDAO {
@@ -20,7 +25,7 @@ public class UserPosDAO {
 	}
 	
 	
-	public void salvar (Userposjava userposjava) {
+	public void salvar(Userposjava userposjava) {
 		
 		try {
 		String sql = "insert into userposjava (nome, email) values (?, ?)";
@@ -37,6 +42,27 @@ public class UserPosDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void salvaTelefone(Telefone telefoneUser ) {
+		
+		try {
+			
+			String sql = " insert into telefoneuser(numero, tipo, usuariopessoa ) values (?, ?, ?); ";
+			PreparedStatement insert = connection.prepareStatement(sql);
+			
+			insert.setString(1, telefoneUser.getNumero());
+			insert.setString(2, telefoneUser.getTipo());
+			insert.setLong(3, telefoneUser.getUsuario());
+			
+			insert.execute();
+			connection.commit();
+			System.out.println("Telefone inserido com sucesso");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	public List<Userposjava> listar() throws Exception {
@@ -79,6 +105,35 @@ public class UserPosDAO {
 		}
 		
 		return user;
+	}
+	
+	public List<BeanUserFone> listaUserFone(Long idUser) {
+		List<BeanUserFone> listUserFone = new ArrayList<BeanUserFone>();
+		
+		try {
+			
+			String sql = "select userp.nome, fone.numero, userp.email from telefoneuser as fone "
+					+ "inner join userposjava as userp "
+					+ "on fone.usuariopessoa = userp.id "
+					+ "where userp.id = " + idUser;
+			
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				BeanUserFone userFone = new BeanUserFone();
+				userFone.setNome(resultSet.getString("nome"));
+				userFone.setNumero(resultSet.getString("numero"));
+				userFone.setEmail(resultSet.getString("email"));
+				
+				listUserFone.add(userFone);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return listUserFone;
+		
 	}
 	
 	public void atualizar(Userposjava userAtualizado) {
