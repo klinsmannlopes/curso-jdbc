@@ -133,5 +133,17 @@ public class TestUserPosDAO {
 
 	}
 	
+	@Test
+	public void testeDeleteFoneUser() {
+		
+		UserPosDAO dao = new UserPosDAO();
+		
+		try {
+			dao.deleteFonesPorUser(2L);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 }
